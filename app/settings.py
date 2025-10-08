@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+# django1
+# Django@1
 
 from pathlib import Path
 import os
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cars',
     'accounts',
+    'analytics',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'analytics.middleware.AnalyticsMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'

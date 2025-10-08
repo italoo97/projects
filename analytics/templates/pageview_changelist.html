@@ -1,0 +1,8 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools-items %}
+    <li>
+        <a href="{% url 'analytics:pageview_stats' %}" class="button">📊 Ver Gráficos</a>
+    </li>
+    {{ block.super }}
+{% endblock %}

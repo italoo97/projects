@@ -15,20 +15,24 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from cars.views import cars_view, new_cars_view
+from cars.views import CarListView, NewCarsCreateView, CarDetailView, CarUpdateView, CarDeleteView
 from accounts.views import register_view, change_view, login_view, logout_view, profile_view, edit_profile_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('cars/', cars_view, name='cars_list'),
-    path('newcars/', new_cars_view, name='car_form'),
+    path('cars/', CarListView.as_view(), name='cars_list'),
+    path('newcars/', NewCarsCreateView.as_view(), name='car_form'),
     path('register/', register_view, name='register'),
     path('change/', change_view, name='change'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('profile/', profile_view, name='profile'),
     path('editprofile/', edit_profile_view, name='edit_profile'),
+    path('analytics/', include('analytics.urls')),
+    path('car/<int:pk>/', CarDetailView.as_view(), name='car_detail'),
+    path('car/<int:pk>/update', CarUpdateView.as_view(), name='car_update'),
+    path('car/<int:pk>/delete', CarDeleteView.as_view(), name='car_delete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

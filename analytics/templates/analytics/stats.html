@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Estatísticas de Acesso - Multimarcas{% endblock %}
+
+{% block content %}
+<div class="admin-stats-container">
+    <!-- Cabeçalho com estatísticas -->
+    <div class="stats-header">
+        <h1>📊 Estatísticas de Acesso</h1>
+        <p>Dados reais coletados do sistema</p>
+        
+        <!-- Estatísticas rápidas -->
+        <div class="quick-stats">
+            <div class="stat-item">
+                <div class="stat-number">{{ total_views|default:"0" }}</div>
+                <div class="stat-label">Total de Visualizações</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ unique_visitors|default:"0" }}</div>
+                <div class="stat-label">Visitantes Únicos</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="charts-grid">
+        <!-- Gráfico Diário -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h2>📈 Visualizações por Dia</h2>
+                <small>Últimos 7 dias</small>
+            </div>
+            <div class="chart-content">
+                {{ daily_chart|safe }}
+            </div>
+        </div>
+
+        <!-- Gráfico Sistemas Operacionais -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h2>💻 Sistemas Operacionais</h2>
+                <small>Distribuição</small>
+            </div>
+            <div class="chart-content">
+                {{ os_chart|safe }}
+            </div>
+        </div>
+
+        <!-- Gráfico Navegadores -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h2>🌐 Navegadores</h2>
+                <small>Mais utilizados</small>
+            </div>
+            <div class="chart-content">
+                {{ browser_chart|safe }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Botões de Ação -->
+    <div class="stats-actions">
+        <a href="{% url 'admin:analytics_pageview_changelist' %}" class="btn btn-primary">
+            ← Voltar para Admin
+        </a>
+        <a href="{% url 'admin:index' %}" class="btn btn-secondary">
+            ↰ Painel Administrativo
+        </a>
+        <a href="{% url 'cars_list' %}" class="btn btn-outline">
+            🚗 Ver Carros
+        </a>
+    </div>
+</div>
+
+<!-- Plotly JS -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<style>
+    /* Estilos anteriores... */
+
+    .quick-stats {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin-top: 25px;
+        flex-wrap: wrap;
+    }
+
+    .stat-item {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 15px 25px;
+        border-radius: var(--border-radius);
+        backdrop-filter: blur(10px);
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        font-weight: 400;
+    }
+
+    .chart-header small {
+        color: var(--gray-color);
+        font-size: 0.85rem;
+        margin-left: 10px;
+        font-weight: 400;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .btn-primary {
+        background: #0096c7;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #0077a3;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 150, 199, 0.3);
+    }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+    }
+
+    .btn-outline {
+        background: transparent;
+        color: #0096c7;
+        border-color: #0096c7;
+    }
+
+    .btn-outline:hover {
+        background: #0096c7;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .quick-stats {
+            gap: 20px;
+        }
+        
+        .stat-item {
+            padding: 12px 20px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+        }
+    }
+
+    .btn {
+            width: 100%;
+            max-width: 300px;
+            justify-content: center;
+    }
+</style>
+{% endblock %}
