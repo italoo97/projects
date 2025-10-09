@@ -7,6 +7,11 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 #from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from openai_api.client import get_ai_response, get_fallback_response
 
 # Objetos Definidos com as classes proprias para cada uma das suas respectivas funções
 
@@ -55,6 +60,44 @@ class NewBrandCreateView(CreateView):
 	form_class = CarBrandForm
 	template_name = "new_brand.html"
 	success_url = '/cars/'
+
+@require_POST
+@csrf_exempt
+def chat_api(request):
+    try:
+        data = json.loads(request.body)
+        user_message = data.get('message', '')
+        
+        if not user_message:
+            return JsonResponse({'response': 'Por favor, digite uma mensagem.'})
+        
+        # Contexto da empresa
+        company_context = f"""
+        Você é um assistente virtual da GESSCAR.
+        
+        Informações importantes:
+        - Horário: Segunda a Sexta (8h-18h), Sábado (8h-12h)
+        - Local: Rua das Concessionárias, 123 - Centro, São Paulo
+        - Telefone: (11) 9999-9999
+        - Email: contato@gesscar.com
+        - Especialidade: Carros usados e seminovos
+        - Serviços: Vendas, financiamento, avaliação de veículos
+        
+        Pergunta do usuário: {user_message}
+        
+        Responda de forma amigável, útil e profissional.
+        """
+        
+        # Tentar usar IA, se falhar usa fallback
+        try:
+            response = get_ai_response(company_context, provider='chatgpt')
+        except:
+            response = get_fallback_response(user_message)
+        
+        return JsonResponse({'response': response})
+        
+    except Exception as e:
+        return JsonResponse({'error': 'Erro interno do servidor'}, status=500)
 
 #==============================================================================================#
 

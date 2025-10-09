@@ -20,7 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from cars.views import CarListView, NewCarsCreateView, CarDetailView, CarUpdateView, CarDeleteView, NewBrandCreateView
 from accounts.views import change_view, logout_view, profile_view, edit_profile_view, auth_page_view #login_view, register_view
-
+from cars import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('cars/', CarListView.as_view(), name='cars_list'),
@@ -36,4 +36,5 @@ urlpatterns = [
     path('car/<int:pk>/', CarDetailView.as_view(), name='car_detail'),
     path('car/<int:pk>/update', CarUpdateView.as_view(), name='car_update'),
     path('car/<int:pk>/delete', CarDeleteView.as_view(), name='car_delete'),
+    path('api/chat/', views.chat_api, name='chat_api'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
