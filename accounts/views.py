@@ -5,15 +5,64 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from accounts.forms import ProfileForm
 
-def register_view(request):
-    if request.method == 'POST':
-        user_form = UserCreationForm(request.POST)
-        if user_form.is_valid():
-            user_form.save()
-            return redirect('login')
-    else:
-        user_form = UserCreationForm()
-    return render(request, 'register.html', {'user_form': user_form})
+def auth_page_view(request):
+    login_form = AuthenticationForm()
+    register_form = UserCreationForm()
+    is_register = "register" in request.path
+    active_tab = "register" if is_register else "login"
+
+    if request.method == "POST":
+        if "username" in request.POST and "password" in request.POST and "password1" not in request.POST:
+            login_form = AuthenticationForm(request, data=request.POST)
+            if login_form.is_valid():
+                user = login_form.get_user()
+                login(request, user)
+                messages.success(request, f"Bem-vindo, {user.username}!")
+                return redirect("cars_list")
+            else:
+                messages.error(request, "Usuário ou senha incorretos.")
+                active_tab = "login"
+
+        elif "password1" in request.POST and "password2" in request.POST:
+            register_form = UserCreationForm(request.POST)
+            if register_form.is_valid():
+                user = register_form.save()
+                messages.success(request, "Cadastro realizado com sucesso! Faça login.")
+                active_tab = "login"
+            else:
+                messages.error(request, "Erro ao cadastrar. Verifique os campos.")
+                active_tab = "register"
+
+    context = {
+        "login_form": login_form,
+        "register_form": register_form,
+        "active_tab": active_tab,
+    }
+    return render(request, "index.html", context)
+
+# def register_view(request):
+#     if request.method == 'POST':
+#         user_form = UserCreationForm(request.POST)
+#         if user_form.is_valid():
+#             user_form.save()
+#             return redirect('login')
+#     else:
+#         user_form = UserCreationForm()
+#     return render(request, 'register.html', {'user_form': user_form})
+
+# def login_view(request):
+#     if request.method == 'POST':
+#         username = request.POST['username']
+#         password = request.POST['password']
+#         user = authenticate(request, username=username, password=password)
+#         if user is not None:
+#             login(request, user)
+#             return redirect('cars_list')
+#         else:
+#             login_form = AuthenticationForm()
+#     else:
+#         login_form = AuthenticationForm()
+#     return render(request, 'index.html', {'login_form': login_form})
 
 @login_required
 def change_view(request):
@@ -27,20 +76,6 @@ def change_view(request):
     else:
         change_form = PasswordChangeForm(user=request.user)
     return render(request, 'change.html', {'change_form': change_form})
-
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('cars_list')
-        else:
-            login_form = AuthenticationForm()
-    else:
-        login_form = AuthenticationForm()
-    return render(request, 'login.html', {'login_form': login_form})
 
 @login_required
 def logout_view(request):

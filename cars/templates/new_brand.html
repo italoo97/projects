@@ -8,10 +8,7 @@
             {{ form.as_table }} <!--{{ new_car_form.as_table }} se não utilizar o CreateView tem que ter o new_car-->
         </table>
 
-        <div class="d-flex gap-2 mt-4">
-            <input type="submit" value="Cadastrar" class="btn btn-primary">
-            <a href="{% url 'brand' %}" class="btn btn-primary">Nova Marca</a>
-        </div>
+        <input type="submit" value="Cadastrar" class="btn btn-primary">
 
     </form>
 {% endblock %}

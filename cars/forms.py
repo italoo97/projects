@@ -34,3 +34,9 @@ class CarModelForm(forms.ModelForm):
         if value < 20000:
             self.add_error('value', 'Valor Minimo deve ser de R$20.000')
         return value
+    
+class CarBrandForm(forms.ModelForm):
+
+    class Meta:
+        model = Brand
+        fields = '__all__'

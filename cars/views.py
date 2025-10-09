@@ -1,6 +1,6 @@
 # from django.shortcuts import render, redirect
-from cars.models import Car
-from cars.forms import CarModelForm
+from cars.models import Car, Brand
+from cars.forms import CarModelForm, CarBrandForm
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 # from django.views import View
@@ -47,6 +47,13 @@ class CarUpdateView(UpdateView):
 class CarDeleteView(DeleteView):
 	model = Car
 	template_name = 'car_delete.html'
+	success_url = '/cars/'
+
+@method_decorator(login_required, name='dispatch')
+class NewBrandCreateView(CreateView):
+	model = Brand
+	form_class = CarBrandForm
+	template_name = "new_brand.html"
 	success_url = '/cars/'
 
 #==============================================================================================#
