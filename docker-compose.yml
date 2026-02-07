@@ -1,0 +1,11 @@
+services:
+  api:
+    build: .
+    container_name: car_dealership
+    ports:
+      - "8001:5000"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    command: python manage.py runserver 0.0.0.0:5000

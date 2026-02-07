@@ -12,7 +12,7 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 client2 = genai.Client(api_key=GEMINI_KEY)
 
 def get_car_ai(model, brand, model_year):   
-    message = ''''Faça uma descrição atrativa para o carro {} {} {} , Utilize apenas 250 caracteres que convencem o cliente.'''
+    message = ''''Faça uma descrição atrativa para o carro {} {} {} , Utilize apenas 250 caracteres que convencem o cliente em ingles.'''
     try:    
         message = message.format(brand, model, model_year)
         response = client.chat.completions.create(
